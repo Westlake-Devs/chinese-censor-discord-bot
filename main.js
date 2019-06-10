@@ -6,6 +6,7 @@ var curseWords = ['fuck', 'fuck you', 'cao', '草','曹']
 var fakeThings = ['starvation', 'poverty', 'capitalism']
 var offensive = ['pooh', "维尼"]
 
+// Reporting accessible channels
 client.on('ready', () => {
         // List servers the bot is connected to
         console.log("Reporting Infiltrated Zones...")
@@ -21,6 +22,7 @@ client.on('ready', () => {
     }
 )
 
+// An Arrays.contains like function
 function phraseMatchesList(phrase, list) {
     for(var i = 0; i < list.length; i++)
         if(phrase.includes(list[i]))
@@ -28,6 +30,7 @@ function phraseMatchesList(phrase, list) {
     return false
 }
 
+// Process bot commands
 function processCommand(message) {
     let fullCommand = message.content.substr(1)
     let splitCommand = fullCommand.split(" ")
@@ -35,40 +38,45 @@ function processCommand(message) {
     let arguments = splitCommand.slice(1)
     switch(primaryCommand) {
         case "disappear":
-            async () => {
+            del = async () => {
                 message.delete()
                 const fetched = await message.channel.fetchMessages({limit: arguments[0]}); // This grabs the last number(args) of messages in the channel.
                 console.log(fetched.size + ' messages found, deleting...'); // Lets post into console how many messages we are deleting
-    
                 // Deleting the messages
                 message.channel.bulkDelete(fetched)
-                    .catch(error => message.channel.send(`Error: ${error}`)); // If it finds an error, it posts it into the channel.
+                    .catch(error => message.channel.send(`Error: ${error} Deletion attempts were obstructed by human rights lawyers. Skrew them.`)); // If it finds an error, it posts it into the channel.
             }
+            del().then(() => {
+                    message.channel.send("已和谐"+arguments[0]+"条跟帖。")
+                }
+            )
             break
 
         case "nuke":
-            console.log("nu")
-            async () => {
-                console.log("nuking")
+            nk = async () => {
                 let fetched;
                 do {
-                    fetched = await channel.fetchMessages({limit: 100});
+                    fetched = await message.channel.fetchMessages({limit: 100});
                     message.channel.bulkDelete(fetched);
                 }
                 while(fetched.size >= 2);
             }
+            nk().then(
+                () => {
+                    message.channel.send("已和谐整个频道。")
+                }
+            )
             break
     }
 
 }
 
+// Message interceptor
 client.on('message', (message) => {
-    if(message.author.id == 584213592602181632) return
+    if(message.author.id == 584213592602181632 || message.channel.id == 587302958085963787) return
     // console.log(message)
-    if(message.username)
-    var m = message.content.toLowerCase()
-    if(m == undefined)
-        m = message.content
+    let m = message.content
+    m = m.toLowerCase() === undefined ? m : m.toLowerCase()
     console.log("> Intercepted message from " + message.author.username+":")
     console.log(m+"\n")
 
@@ -93,6 +101,8 @@ client.on('message', (message) => {
 });
 
 
+
+// Loggin in
 const fs = require('fs')
 fs.readFile('./token', 'utf8', (err, data) => {
         client.login(data)
