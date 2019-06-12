@@ -129,7 +129,6 @@ function printScore(message)
       userID: message.mentions.users.first().id
     }, (err, creditScore) => {
       if(err) console.log(err);
-      if(!creditScore){
         if(!creditScore){
           const newScore = new Netizen({
             userID: message.author.id,
