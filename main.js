@@ -26,6 +26,15 @@ client.on('ready', () => {
     }
 )
 
+//new person joined
+client.on('guildMemberAdd', member =>
+{
+  member.client.channels.find('name', "welcome").send('Hello and welcome to China, citizen ' + member + '!');
+  member.addRole(msg.guild.roles.find("name", "Chinese Netizen"));
+}
+);
+
+
 // An Arrays.contains like function
 function phraseMatchesList(phrase, list) {
     for(var i = 0; i < list.length; i++)
