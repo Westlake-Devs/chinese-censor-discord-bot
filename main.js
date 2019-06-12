@@ -130,8 +130,13 @@ function printScore(message)
     }, (err, creditScore) => {
       if(err) console.log(err);
       if(!creditScore){
-
-        message.channel.send("这个人不存在。")
+        if(!creditScore){
+          const newScore = new Netizen({
+            userID: message.author.id,
+            creditScore: 1000
+          })
+          newScore.save().catch(err => console.log(err));
+        message.channel.send("1000")
 
       }
       else
@@ -152,7 +157,10 @@ function printScore(message)
 
 // Message interceptor
 client.on('message', (message) => {
-    if(message.channel.name == "中华民国自由区" || message.author.bot) return
+    //bad code that you should change
+    //only allows for one specific instance
+    //better to match with channel names
+    if(message.author.id == 584213592602181632 || message.channel.id == 587302958085963787 || message.author.bot) return
     // console.log(message)
     let m = message.content
     m = m.toLowerCase() === undefined ? m : m.toLowerCase()
@@ -161,7 +169,7 @@ client.on('message', (message) => {
 
     // 和谐ing
     if(phraseMatchesList(m, bannedWords)) {
-        message.delete().catch(err => console.log(err))
+        message.delete()
         message.channel.send("警告：请"+message.author+"同志不要没有依据地制造污蔑我国政府的假新闻！")
         modifyScore(message, -50)
     } else if(phraseMatchesList(m, curseWords)) {
