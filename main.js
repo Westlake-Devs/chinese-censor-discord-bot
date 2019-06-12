@@ -130,13 +130,12 @@ function printScore(message)
     }, (err, creditScore) => {
       if(err) console.log(err);
         if(!creditScore){
+          message.channel.send("1000")
           const newScore = new Netizen({
             userID: message.author.id,
             creditScore: 1000
           })
           newScore.save().catch(err => console.log(err));
-        message.channel.send("1000")
-
       }
       else
       {
