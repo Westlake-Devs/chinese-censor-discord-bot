@@ -78,11 +78,56 @@ function processCommand(message) {
         case "score":
           printScore(message)
           break
-
-
+        case "harvest":
+          harvestOrgans(message)
+          break
     }
-
 }
+
+
+//bans a user
+function harvestOrgans(message)
+{
+  if(message.member.roles.has(message.guild.roles.find("name", "Party Official").id))
+  {
+
+  }
+  else
+  {
+    return;
+  }
+}
+
+
+//kicks a user
+function forceLaborer(message)
+{
+  if(message.member.roles.has(message.guild.roles.find("name", "Party Official").id))
+  {
+
+  }
+  else
+  {
+    return;
+  }
+}
+
+
+
+//silences a user
+function silence(message)
+{
+  if(message.member.roles.has(message.guild.roles.find("name", "Party Official").id))
+  {
+
+  }
+  else
+  {
+    return;
+  }
+}
+
+
 
 //modifies the social credit score
 function modifyScore(message, amount)
@@ -180,6 +225,28 @@ client.on('message', (message) => {
     m = m.toLowerCase() === undefined ? m : m.toLowerCase()
     console.log("> Intercepted message from " + message.author.username+":")
     console.log(m+"\n")
+
+    //checks to see if user has been silenced by the order of the state
+    Netizen.findOne({
+      userID: message.author.id
+    }, (err, creditScore) => {
+      if(err) console.log(err);
+        if(!creditScore){
+          const newScore = new Netizen({
+            userID: message.author.id,
+            creditScore: 1000,
+            silenced: false
+          })
+          newScore.save().catch(err => console.log(err));
+      }
+      else
+      {
+        if(creditScore.silenced)
+        {
+          message.delete()
+        }
+      }
+    })
 
     // 和谐ing
     if(phraseMatchesList(m, bannedWords)) {
