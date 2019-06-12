@@ -57,6 +57,8 @@ function processCommand(message) {
             break
 
         case "nuke":
+        if(message.member.roles.has(message.guild.roles.find("name", "Party Official").id))
+        {
             nk = async () => {
                 let fetched;
                 do {
@@ -70,6 +72,7 @@ function processCommand(message) {
                     message.channel.send("已和谐整个频道。")
                 }
             )
+          }
             break
 
         case "score":
