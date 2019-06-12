@@ -181,20 +181,20 @@ client.on('message', (message) => {
     // 和谐ing
     if(phraseMatchesList(m, bannedWords)) {
         message.delete().catch(err => console.log(err))
-        message.channel.send("警告：请"+message.author+"同志不要没有依据地制造污蔑我国政府的假新闻！")
+        message.author.send("警告：请"+message.author+"同志不要没有依据地制造污蔑我国政府的假新闻！")
         modifyScore(message, -50)
     } else if(phraseMatchesList(m, curseWords)) {
-        message.channel.send("不，你。")
-        message.channel.send({files: ["./cnm.png"]})
+        message.author.send("不，你。")
+        message.author.send({files: ["./cnm.png"]})
         modifyScore(message, -10)
     } else if (phraseMatchesList(m, fakeThings)) {
-        message.channel.send("Doesn't exist and is a lie.")
+        message.author.send("Doesn't exist and is a lie.")
         modifyScore(message, -20)
     } else if (phraseMatchesList(m, offensive)) {
-        message.channel.send("Hey you! "+message.author+" \nSTFU!")
+        message.author.send("Hey you! "+message.author+" \nSTFU!")
         modifyScore(message, -10)
     } else if (m.match("ping")) {
-        message.channel.send("Ping你妈呀！")
+        message.author.send("Ping你妈呀！")
     }
     // commands
     if (m.substring(0,1) == "!") {
