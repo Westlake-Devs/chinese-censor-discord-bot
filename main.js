@@ -145,7 +145,23 @@ function printScore(message)
   }
   else
   {
-    return;
+    Netizen.findOne({
+      userID: message.mentions.users.first().id
+    }, (err, creditScore) => {
+      if(err) console.log(err);
+        if(!creditScore){
+          message.channel.send("1000")
+          const newScore = new Netizen({
+            userID: message.author.id,
+            creditScore: 1000
+          })
+          newScore.save().catch(err => console.log(err));
+      }
+      else
+      {
+        message.channel.send(creditScore.creditScore)
+      }
+    })
   }
 
 }
