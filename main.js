@@ -78,9 +78,13 @@ function processCommand(message) {
         case "score":
           printScore(message)
           break
-        case "harvest":
-          harvestOrgans(message)
+        case "silence":
+          silence(message)
           break
+        case "unsilence":
+          unsilence(message)
+          break
+
     }
 }
 
@@ -119,7 +123,59 @@ function silence(message)
 {
   if(message.member.roles.has(message.guild.roles.find("name", "Party Official").id))
   {
+    Netizen.findOne({
+      userID: message.mentions.users.first().id
+    }, (err, creditScore) => {
+      if(err) console.log(err);
+        if(!creditScore){
+          message.channel.send("Silenced " + message.mentions.users.first() + " by the order of the state.")
+          const newScore = new Netizen({
+            userID: message.author.id,
+            creditScore: 1000,
+            silenced: true
+          })
+          newScore.save().catch(err => console.log(err));
+      }
+      else
+      {
+        creditScore.silenced = true;
+        message.channel.send("Silenced " + message.mentions.users.first() + " by the order of the state.")
+        creditScore.save().catch(err => console.log(err));
+      }
+    })
+  }
+  else
+  {
+    return;
+  }
+}
 
+
+//removes the silencer on a user
+function unsilence(message)
+{
+  if(message.member.roles.has(message.guild.roles.find("name", "Party Official").id))
+  {
+    Netizen.findOne({
+      userID: message.mentions.users.first().id
+    }, (err, creditScore) => {
+      if(err) console.log(err);
+        if(!creditScore){
+          message.channel.send("Unsilenced " + message.mentions.users.first() + " by the order of the state.")
+          const newScore = new Netizen({
+            userID: message.author.id,
+            creditScore: 1000,
+            silenced: false
+          })
+          newScore.save().catch(err => console.log(err));
+      }
+      else
+      {
+        creditScore.silenced = false;
+        message.channel.send("Unsilenced " + message.mentions.users.first() + " by the order of the state.")
+        creditScore.save().catch(err => console.log(err));
+      }
+    })
   }
   else
   {
@@ -146,7 +202,8 @@ function modifyScore(message, amount)
     if(!creditScore){
       const newScore = new Netizen({
         userID: message.author.id,
-        creditScore: 1000
+        creditScore: 1000,
+        silenced: false
       })
       newScore.save().catch(err => console.log(err));
     }
@@ -181,7 +238,8 @@ function printScore(message)
           message.channel.send("1000")
           const newScore = new Netizen({
             userID: message.author.id,
-            creditScore: 1000
+            creditScore: 1000,
+            silenced: false
           })
           newScore.save().catch(err => console.log(err));
       }
@@ -201,7 +259,8 @@ function printScore(message)
           message.channel.send("1000")
           const newScore = new Netizen({
             userID: message.author.id,
-            creditScore: 1000
+            creditScore: 1000,
+            silenced: false
           })
           newScore.save().catch(err => console.log(err));
       }
