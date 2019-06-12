@@ -121,6 +121,13 @@ function forceLaborer(message)
 //silences a user
 function silence(message)
 {
+  try {
+    let test = message.mentions.users.first().id
+  }
+  catch(err) {
+    message.channel.send("Error, wrong input.")
+    return
+  }
   if(message.member.roles.has(message.guild.roles.find("name", "Party Official").id))
   {
     Netizen.findOne({
@@ -154,6 +161,13 @@ function silence(message)
 //removes the silencer on a user
 function unsilence(message)
 {
+  try {
+    let test = message.mentions.users.first().id
+  }
+  catch(err) {
+    message.channel.send("Error, wrong input.")
+    return
+  }
   if(message.member.roles.has(message.guild.roles.find("name", "Party Official").id))
   {
     Netizen.findOne({
