@@ -43,7 +43,7 @@ exports.nuke = function(message) {
         let fetched;
         do {
             fetched = await message.channel.fetchMessages({limit: 100});
-            message.channel.bulkDelete(fetched);
+            message.channel.bulkDelete(fetched).catch(error => console.log(error));
         }
         while(fetched.size >= 2);
     }
