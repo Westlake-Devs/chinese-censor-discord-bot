@@ -17,8 +17,7 @@ exports.disappear = function(message) {
       const fetched = await message.channel.fetchMessages({limit: arguments[0]}); // This grabs the last number(args) of messages in the channel.
       console.log(fetched.size + ' messages found, deleting...'); // Lets post into console how many messages we are deleting
       // Deleting the messages
-      message.channel.bulkDelete(fetched)
-          .catch(error => console.log(error)); // If it finds an error
+      message.channel.bulkDelete(fetched).catch(error => console.log(error)); // If it finds an error
   }
 
   del().then(() => {
