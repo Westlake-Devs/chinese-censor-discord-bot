@@ -12,6 +12,16 @@ exports.imported = function() {
 exports.disappear = function(message) {
   let fullCommand = message.content.substr(1)
   let arguments = fullCommand.split(" ").slice(1)
+  if(arguments[0] > 100)
+  {
+    message.channel.send('这个数字太大了。')
+    return;
+  }
+  else if(arguments[0] < 1)
+  {
+    message.channel.send('不可能。')
+    return;
+  }
   del = async () => {
       message.delete()
       const fetched = await message.channel.fetchMessages({limit: arguments[0]}); // This grabs the last number(args) of messages in the channel.
@@ -25,7 +35,7 @@ exports.disappear = function(message) {
       }
   )
 }
-  
+
 // clearing channel
 exports.nuke = function(message) {
   if(message.member.roles.has(message.guild.roles.find("name", "Party Official").id)) {
