@@ -22,6 +22,11 @@ client.on('guildMemberAdd', member =>
 );
 
 
+client.on('guildCreate', guild => {
+  cp.toggleEssentials(guild)
+});
+
+
 // An Arrays.contains like function
 function phraseMatchesList(phrase, list) {
   for(var i = 0; i < list.length; i++)
@@ -48,7 +53,10 @@ function processCommand(message) {
       cp.harvestOrgans(message)
       break
     case "silence":
+      if(cp.checkPerms(message) === true)
+      {
       cp.silence(message)
+      }
       break
     case "unsilence":
       cp.unsilence(message)

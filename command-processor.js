@@ -2,6 +2,7 @@
 const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/netizendb', {useNewUrlParser: true});
 const Netizen = require("./citizens.js");
+const Server = require("./guild-configurations-commands.js")
 
 // checking to see that this bruh is imported
 exports.imported = function() {
@@ -41,11 +42,8 @@ exports.nuke = function(message) {
   if(message.member.roles.has(message.guild.roles.find("name", "Party Official").id)) {
     nk = async () => {
         let fetched;
-        do {
-            fetched = await message.channel.fetchMessages({limit: 100});
-            message.channel.bulkDelete(fetched).catch(error => console.log(error));
-        }
-        while(fetched.size >= 2);
+        fetched = await message.channel.fetchMessages({limit: 100});
+        message.channel.bulkDelete(fetched).catch(error => console.log(error));
     }
     nk().then(
         () => {
@@ -66,15 +64,92 @@ exports.harvestOrgans = function(message)
   }
 }
 
+exports.toggleEssentials = function(guild)
+{
+  Server.findOne({
+    serverID: guild.id
+  }, (err, serverSettings) => {
+    if(err) console.log(err);
+      if(!serverSettings){
+        const newSettings = new Server({
+          serverID: guild.id,
+          prefix: "!",
+          logChannel: "default",
+          modRole: "default",
+        })
+        newSettings.save().catch(err => console.log(err));
+    }
+    else
+    {
+
+    }
+  })
+}
+
 //kicks a user
 exports.forceLaborer = function(message)
 {
+  Server.findOne({
+    serverID: message.guild.id
+  }, (err, serverSettings) => {
+    if(err) console.log(err);
+      if(!serverSettings){
+        const newSettings = new Server({
+          serverID: guild.id,
+          prefix: "!",
+          logChannel: "default",
+          modRole: "default",
+        })
+        newSettings.save().catch(err => console.log(err));
+
+    }
+    else
+    {
+
+    }
+  })
   if(message.member.roles.has(message.guild.roles.find("name", "Party Official").id)) {
 
   }
   else {
     return;
   }
+}
+
+//checks to verify permissions
+exports.checkPerms = function(message)
+{
+  console.log("Perms checked")
+  Server.findOne({
+    serverID: message.guild.id
+  }, (err, serverSettings) => {
+    console.log("Step 0")
+    if(err) console.log(err);
+      if(!serverSettings){
+        const newSettings = new Server({
+          serverID: guild.id,
+          prefix: "!",
+          logChannel: "default",
+          modRole: "default",
+        })
+        newSettings.save().catch(err => console.log(err));
+    message.channel.send("You do not have permission to execute this command.")
+    console.log("Step 1")
+    }
+    else
+    {
+      if(message.author.roles.has(message.guild.roles.find("name", serverSettings.modRole)))
+      {
+        console.log("Step 2")
+        return true;
+      }
+      else {
+        console.log("Step 3")
+        return false;
+      }
+    }
+  })
+  console.log("Condition 2")
 }
 
 //silences a user
@@ -87,8 +162,7 @@ exports.silence = function(message)
     message.channel.send("Error, wrong input.")
     return
   }
-  if(message.member.roles.has(message.guild.roles.find("name", "Party Official").id))
-  {
+
     Netizen.findOne({
       userID: message.mentions.users.first().id
     }, (err, creditScore) => {
@@ -109,11 +183,6 @@ exports.silence = function(message)
         creditScore.save().catch(err => console.log(err));
       }
     })
-  }
-  else
-  {
-    return;
-  }
 }
 
 //unsilences a user
